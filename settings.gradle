@@ -1,1 +1,1 @@
-include 'dainty'
+include 'dainty', ':app'
