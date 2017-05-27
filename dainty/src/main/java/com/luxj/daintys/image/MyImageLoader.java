@@ -17,7 +17,7 @@ import com.luxj.daintys.image.strategy.GlideStrategy;
 /**
  * @author Luxj
  * @date create 2017/4/27
- * @description 加载图片入口  可传入不同策略实现不同框架加载图片
+ * @description 可传入不同策略实现不同框架加载图片
  */
 public class MyImageLoader {
 
