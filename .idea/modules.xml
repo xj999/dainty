@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/dainty.iml" filepath="$PROJECT_DIR$/dainty.iml" />
-      <module fileurl="file://E:\dainty\dainty.iml" filepath="E:\dainty\dainty.iml" />
       <module fileurl="file://$PROJECT_DIR$/dainty/dainty-dainty.iml" filepath="$PROJECT_DIR$/dainty/dainty-dainty.iml" />
-      <module fileurl="file://E:\dainty\dainty\dainty-dainty.iml" filepath="E:\dainty\dainty\dainty-dainty.iml" />
     </modules>
   </component>
 </project>
