@@ -5,4 +5,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="loading_value">努力加载中，请稍候…</string>
+    <string name="lib_click_reload">点击重新加载</string>
+    <string name="lib_loading">正在加载...</string>
+    <string name="lib_load_no_data">暂无数据</string>
+    <string name="lib_net_error">网络不太给力</string>
 </resources>

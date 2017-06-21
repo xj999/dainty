@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/allview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/uc_bg"
+    android:clickable="true"
+    android:gravity="center"
+    android:paddingBottom="60dp">
+
+    <LinearLayout
+        android:id="@+id/wkload_l"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/wkload_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="90dp"
+            android:layout_marginRight="90dp"
+            android:src="@mipmap/lib_net_error" />
+
+        <ProgressBar
+            android:id="@+id/wkload_loading"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_horizontal"
+            android:indeterminate="false"
+            android:indeterminateDrawable="@drawable/progress_medium_white"
+            android:indeterminateDuration="500" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/wkload_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wkload_l"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="网络不太给力"
+        android:textColor="@color/list_line_color"
+        android:textSize="22sp" />
+
+
+    <TextView
+        android:id="@+id/wkload_reload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wkload_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/transparent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/lib_click_reload"
+        android:textColor="#bbbbbb"
+        android:textSize="14sp" />
+</RelativeLayout>

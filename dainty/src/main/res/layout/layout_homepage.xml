@@ -1,16 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/drawer_layout"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:fitsSystemWindows="true" tools:openDrawer="start">
+<com.luxj.daintys.WkRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <include layout="@layout/app_bar_home_page" android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
-    <android.support.design.widget.NavigationView android:id="@+id/nav_view"
-        android:layout_width="wrap_content" android:layout_height="match_parent"
-        android:layout_gravity="start" android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_home_page" app:menu="@menu/layout_homepage_drawer" />
+    <com.luxj.daintys.RefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</android.support.v4.widget.DrawerLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/t1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="hello" />
+
+                <TextView
+                    android:id="@+id/t2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/t1"
+                    android:text="hello2" />
+
+                <TextView
+                    android:id="@+id/t3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/t2"
+                    android:text="hello3" />
+
+
+                <Button
+                    android:id="@+id/b1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/t3"
+                    android:text="nodata" />
+            </LinearLayout>
+        </ScrollView>
+    </com.luxj.daintys.RefreshLayout>
+</com.luxj.daintys.WkRelativeLayout>
