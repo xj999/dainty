@@ -1,29 +1,25 @@
 package com.luxj.daintys;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 
-public class HomePage extends BaseActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class HomePage extends BaseActivity implements UnLeakHandler.UnLeakHandlerCallBack {
     RefreshLayout refreshableView;
+    RecyclerView recy;
     final int SUCCESS = 1;
     final int FAILED = 0;
+    boolean aa;
+    private Handler handlerb = new UnLeakHandler(this, this);
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -39,22 +35,15 @@ public class HomePage extends BaseActivity {
             }
         }
 
-        ;
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_homepage);
-        setTitleText("测试标题");
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recy);
         final WkRelativeLayout relativeLayout = (WkRelativeLayout) findViewById(R.id.main);
         relativeLayout.loadSuccess();
-        findViewById(R.id.b1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                relativeLayout.loadFail();
-            }
-        });
         relativeLayout.setOnReTryListener(new WkRelativeLayout.OnReTryListener() {
             @Override
             public void onReTryClick() {
@@ -62,15 +51,15 @@ public class HomePage extends BaseActivity {
             }
         });
         refreshableView = (RefreshLayout) findViewById(R.id.refresh);
-
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             TextView tv = new TextView(this);
             tv.setText(i + "号头部Textview");
             tv.setBackgroundColor(getResources().getColor(R.color.colorAccent));
             tv.setGravity(Gravity.CENTER);
-            refreshableView.addHeadView(tv, 50);
+//            refreshableView.addHeadView(tv, 50);
         }
-        refreshableView.setRefreshListener(new RefreshLayout.RefreshListener() {
+
+        refreshableView.setmRefreshListener(new RefreshLayout.RefreshListener() {
 
             @Override
             public void onRefresh() {
@@ -79,13 +68,26 @@ public class HomePage extends BaseActivity {
                     @Override
                     public void run() {
                         handler.sendEmptyMessage(SUCCESS);
+                        handlerb.sendEmptyMessage(1);
 
                     }
-                }, 500);
+                }, 5500);
 
 
             }
         });
+
+        MyAdapter adapter = new MyAdapter();
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            list.add("测试数据===" + i);
+        }
+        adapter.setData(list);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+
+
     }
 
     @Override
@@ -94,4 +96,8 @@ public class HomePage extends BaseActivity {
     }
 
 
+    @Override
+    public void handleMessage(Message msg) {
+        Log.e("handlerb", "handleMessage: " + msg.what);
+    }
 }

@@ -11,43 +11,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ScrollView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recy"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/t1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="hello" />
-
-                <TextView
-                    android:id="@+id/t2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/t1"
-                    android:text="hello2" />
-
-                <TextView
-                    android:id="@+id/t3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/t2"
-                    android:text="hello3" />
-
-
-                <Button
-                    android:id="@+id/b1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/t3"
-                    android:text="nodata" />
-            </LinearLayout>
-        </ScrollView>
+            android:layout_height="wrap_content" />
     </com.luxj.daintys.RefreshLayout>
 </com.luxj.daintys.WkRelativeLayout>
