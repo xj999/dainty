@@ -29,6 +29,7 @@ import java.util.Calendar;
  * 刷新控制view
  */
 public class RefreshLayout extends LinearLayout {
+    public static final String TAG = "RefreshLayout";
     /**
      * 下拉刷新状态
      */
@@ -53,25 +54,24 @@ public class RefreshLayout extends LinearLayout {
 
     private View refreshView;
     private int mRefreshTargetTop;
-    ObjectAnimator mRefreshAnim;
+    private ObjectAnimator mRefreshAnim;
 
     //下拉刷新相关布局
-    TextView mRefreshTipTv;
+    private TextView mRefreshTipTv;
 
     private RefreshListener mRefreshListener;
     private int mLastY;
     // 是否可刷新标记
     private boolean isRefreshEnabled = true;
-    /**
-     * 刷新时间
-     */
-    Calendar mLastRefreshTime;
 
     int refreshState = REFRESH_BY_PULLDOWN;
 
     private Context mContext;
 
     private int mHeadCount = 0;
+    private RecyclerView mRecy;
+    private View mChildView;
+    private boolean mCanTouch = true; //刷新时不允许子view滑动
 
     public RefreshLayout(Context context) {
         this(context, null);
@@ -84,8 +84,6 @@ public class RefreshLayout extends LinearLayout {
     }
 
     private void init() {
-        //滑动对象，
-        mLastRefreshTime = Calendar.getInstance();
         //刷新视图顶端的的view
         refreshView = LayoutInflater.from(mContext).inflate(R.layout.layout_refresh_header, null);
         initRefreshView();
@@ -116,6 +114,9 @@ public class RefreshLayout extends LinearLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (!mCanTouch) {
+            return false;
+        }
         int y = (int) event.getRawY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -139,6 +140,10 @@ public class RefreshLayout extends LinearLayout {
         return true;
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return super.dispatchTouchEvent(ev) && mCanTouch;
+    }
 
     /**
      * up事件处理
@@ -279,41 +284,41 @@ public class RefreshLayout extends LinearLayout {
     }
 
     private boolean canScroll() {
-        View childView;
         if (getChildCount() > 1) {
-            childView = this.getChildAt(1);
-            if (childView instanceof ListView) {
-                int top = ((ListView) childView).getChildAt(0).getTop();
-                int pad = ((ListView) childView).getListPaddingTop();
+            mChildView = this.getChildAt(1);
+            if (mChildView instanceof ListView) {
+                int top = ((ListView) mChildView).getChildAt(0).getTop();
+                int pad = ((ListView) mChildView).getListPaddingTop();
                 if ((Math.abs(top - pad)) < 3 &&
-                        ((ListView) childView).getFirstVisiblePosition() == 0) {
+                        ((ListView) mChildView).getFirstVisiblePosition() == 0) {
                     return true;
                 } else {
                     return false;
                 }
-            } else if (childView instanceof ScrollView) {
-                if (((ScrollView) childView).getScrollY() == 0) {
+            } else if (mChildView instanceof ScrollView) {
+                if (((ScrollView) mChildView).getScrollY() == 0) {
                     return true;
                 } else {
                     return false;
                 }
-            } else if (childView instanceof WebView) {
-                if (((WebView) childView).getScrollY() == 0) {
+            } else if (mChildView instanceof WebView) {
+                if (((WebView) mChildView).getScrollY() == 0) {
                     return true;
                 } else {
                     return false;
                 }
-            } else if (childView instanceof GridView) {
-                int top = ((GridView) childView).getChildAt(0).getTop();
-                int pad = ((GridView) childView).getListPaddingTop();
+            } else if (mChildView instanceof GridView) {
+                int top = ((GridView) mChildView).getChildAt(0).getTop();
+                int pad = ((GridView) mChildView).getListPaddingTop();
                 if ((Math.abs(top - pad)) < 3 &&
-                        ((GridView) childView).getFirstVisiblePosition() == 0) {
+                        ((GridView) mChildView).getFirstVisiblePosition() == 0) {
                     return true;
                 } else {
                     return false;
                 }
-            } else if (childView instanceof RecyclerView) {
-                RecyclerView.LayoutManager manager = ((RecyclerView) childView).getLayoutManager();
+            } else if (mChildView instanceof RecyclerView) {
+                mRecy = (RecyclerView) mChildView;
+                RecyclerView.LayoutManager manager = ((RecyclerView) mChildView).getLayoutManager();
                 int top = 0;
                 if (manager instanceof LinearLayoutManager) {
                     top = ((LinearLayoutManager) manager).findFirstVisibleItemPosition();
@@ -321,7 +326,7 @@ public class RefreshLayout extends LinearLayout {
                     top = ((StaggeredGridLayoutManager) manager).findFirstVisibleItemPositions(null)[0];
                 }
 
-                if (((RecyclerView) childView).getChildAt(0).getY() == 0 && top == 0) {
+                if (((RecyclerView) mChildView).getChildAt(0).getY() == 0 && top == 0) {
                     return true;
                 } else {
                     return false;
@@ -373,7 +378,7 @@ public class RefreshLayout extends LinearLayout {
      */
     public void pullDownToRefresh() {
         setRefreshState(REFRESH_BY_PULLDOWN);
-        mRefreshTipTv.setText("下拉刷新");
+        mRefreshTipTv.setText("下拉可以刷新");
     }
 
     /**
@@ -381,7 +386,7 @@ public class RefreshLayout extends LinearLayout {
      */
     public void pullUpToRefresh() {
         setRefreshState(REFRESH_BY_RELEASE);
-        mRefreshTipTv.setText("松开刷新");
+        mRefreshTipTv.setText("松开立即刷新");
     }
 
     /**
@@ -389,8 +394,10 @@ public class RefreshLayout extends LinearLayout {
      */
     public void refreshing() {
         setRefreshState(REFRESHING);
-        mRefreshTipTv.setText("正在刷新...");
+        mRefreshTipTv.setText("正在刷新数据...");
+        mCanTouch = false;
     }
+
 
     /**
      * 刷新成功状态
@@ -398,6 +405,7 @@ public class RefreshLayout extends LinearLayout {
     public void refreshOK() {
         setRefreshState(REFRESHING_SUCCESS);
         mRefreshTipTv.setText("刷新成功");
+        recyclerviewScrollToTop();
     }
 
     /**
@@ -406,7 +414,15 @@ public class RefreshLayout extends LinearLayout {
     public void refreshFailed() {
         setRefreshState(REFRESHING_FAILD);
         mRefreshTipTv.setText("刷新失败");
+        recyclerviewScrollToTop();
     }
 
+    private void recyclerviewScrollToTop() {
+        if (mRecy != null && mRecy.getChildCount() > 0) {
+            mRecy.scrollToPosition(0);
+        }
+
+        mCanTouch = true;
+    }
 
 }

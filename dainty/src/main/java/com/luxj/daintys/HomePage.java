@@ -4,11 +4,10 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +18,7 @@ public class HomePage extends BaseActivity implements UnLeakHandler.UnLeakHandle
     final int SUCCESS = 1;
     final int FAILED = 0;
     boolean aa;
+    MyAdapter adapter;
     private Handler handlerb = new UnLeakHandler(this, this);
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
@@ -51,13 +51,6 @@ public class HomePage extends BaseActivity implements UnLeakHandler.UnLeakHandle
             }
         });
         refreshableView = (RefreshLayout) findViewById(R.id.refresh);
-        for (int i = 0; i < 1; i++) {
-            TextView tv = new TextView(this);
-            tv.setText(i + "号头部Textview");
-            tv.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-            tv.setGravity(Gravity.CENTER);
-//            refreshableView.addHeadView(tv, 50);
-        }
 
         refreshableView.setmRefreshListener(new RefreshLayout.RefreshListener() {
 
@@ -67,6 +60,11 @@ public class HomePage extends BaseActivity implements UnLeakHandler.UnLeakHandle
 
                     @Override
                     public void run() {
+                        List<String> list = new ArrayList<>();
+                        for (int i = 0; i < 100; i++) {
+                            list.add(SystemClock.currentThreadTimeMillis() + " 测试数据===" + i);
+                        }
+                        adapter.setData(list);
                         handler.sendEmptyMessage(SUCCESS);
                         handlerb.sendEmptyMessage(1);
 
@@ -77,7 +75,7 @@ public class HomePage extends BaseActivity implements UnLeakHandler.UnLeakHandle
             }
         });
 
-        MyAdapter adapter = new MyAdapter();
+        adapter = new MyAdapter();
         List<String> list = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             list.add("测试数据===" + i);
