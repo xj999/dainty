@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
@@ -50,30 +50,7 @@ public class HomePage extends BaseActivity implements UnLeakHandler.UnLeakHandle
                 relativeLayout.loadSuccess();
             }
         });
-        refreshableView = (RefreshLayout) findViewById(R.id.refresh);
 
-        refreshableView.setmRefreshListener(new RefreshLayout.RefreshListener() {
-
-            @Override
-            public void onRefresh() {
-                handler.postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        List<String> list = new ArrayList<>();
-                        for (int i = 0; i < 100; i++) {
-                            list.add(SystemClock.currentThreadTimeMillis() + " 测试数据===" + i);
-                        }
-                        adapter.setData(list);
-                        handler.sendEmptyMessage(SUCCESS);
-                        handlerb.sendEmptyMessage(1);
-
-                    }
-                }, 5500);
-
-
-            }
-        });
 
         adapter = new MyAdapter();
         List<String> list = new ArrayList<>();
@@ -82,8 +59,12 @@ public class HomePage extends BaseActivity implements UnLeakHandler.UnLeakHandle
         }
         adapter.setData(list);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
+        PagerSnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
 
 
     }
